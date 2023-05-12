@@ -1,9 +1,15 @@
 import { useState } from "react";
+import Modal from "./components/Modal";
 
 
 const App = () => {
   const [images, setImages] = useState(null)
   const [value, setValue] = useState(null)
+  const [error, setError] = useState(null)
+  const [selectedImage, setSelectedImage] = useState(null)
+  const [modalOpen, setModalOpen] = useState(true)
+
+
   const surpriseOptions = [
     'A green car driving sideways',
     'A yellow panda eating chicken nuggets',
@@ -17,6 +23,11 @@ const App = () => {
   }
 
   const getImages = async () => {
+    setImages(null)
+    if (value === null) {
+      setError('Search Term Missing!')
+      return
+    }
     try {
       const options = {
         method: "POST",
@@ -35,13 +46,32 @@ const App = () => {
       console.error(error)
     }
   };
-  console.log(value)
+
+  const uploadImage = async (e) => {
+    console.log(e.target.files[0])
+    const formData = new FormData()
+    formData.append('file', e.target.files[0])
+    setSelectedImage(e.target.files[0])
+
+    try {
+      const options = {
+        method: 'POST',
+        body: formData
+      }
+      const response = await fetch('http://localhost:8000/upload', options)
+      const data = response.json()
+      console.log(data)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   return (
     <div className="app">
       <section className="search-section">
         <p>Start with a detailed description
           <span onClickCapture={surpriseMe} className="surprise">Surprise me</span>
-          </p>
+        </p>
         <div className="input-container">
           <input
             value={value}
@@ -50,6 +80,17 @@ const App = () => {
           />
           <button onClick={getImages}>Generate</button>
         </div>
+        <p className="extra-info">
+          <span>
+            <label htmlFor="files">Click here to upload an image in 256x256, 512x512 or 1024x1024 format</label>
+            <input onChange={uploadImage} type="file" id="files" accept="image/*" hidden />
+          </span>
+
+        </p>
+        {error && <p>{error}</p>}
+        {modalOpen && <div className="overlay">
+          <Modal setModalOpen={setModalOpen} setSelectedImage={setSelectedImage}></Modal>
+        </div>}
       </section>
       <section className="image-section">
         {images?.map((image, _index) => (
