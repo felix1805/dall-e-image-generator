@@ -7,7 +7,7 @@ const App = () => {
   const [value, setValue] = useState(null)
   const [error, setError] = useState(null)
   const [selectedImage, setSelectedImage] = useState(null)
-  const [modalOpen, setModalOpen] = useState(true)
+  const [modalOpen, setModalOpen] = useState(false)
 
 
   const surpriseOptions = [
@@ -51,6 +51,7 @@ const App = () => {
     console.log(e.target.files[0])
     const formData = new FormData()
     formData.append('file', e.target.files[0])
+    setModalOpen(true)
     setSelectedImage(e.target.files[0])
 
     try {
@@ -89,7 +90,7 @@ const App = () => {
         </p>
         {error && <p>{error}</p>}
         {modalOpen && <div className="overlay">
-          <Modal setModalOpen={setModalOpen} setSelectedImage={setSelectedImage}></Modal>
+          <Modal setModalOpen={setModalOpen} setSelectedImage={setSelectedImage} selectedImage={selectedImage}></Modal>
         </div>}
       </section>
       <section className="image-section">
