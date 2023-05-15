@@ -11,8 +11,8 @@ To begin using this app, follow these steps:
 * Create a .env file in the root directory with your OpenAI API key, in the following format:
 
 
-``` 
-API_KEY=your_api_key_here
+```javascript
+API_KEY=<your_api_key_here>
 ```
 
 

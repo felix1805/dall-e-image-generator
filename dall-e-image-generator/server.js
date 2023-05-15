@@ -24,6 +24,7 @@ const storage = multer.diskStorage({
 })
 
 const upload = multer({ storage: storage }).single('file')
+let filePath
 
 app.post('/images', async (req, res) => {
 
@@ -48,9 +49,23 @@ app.post('/upload', (req, res) => {
     } else if (err) {
       return res.status(500).json(err)
     }
-    console.log(req.file)
+    console.log(req.file.path)
+    filePath = req.file.path
   })
 })
+
+app.post('/variations', async (req, res) => {
+  try {
+    const response = await openai.createImageVariation(
+      fs.createReadStream(filePath),
+      2,
+      "1024x1024"
+    );
+      res.send(response.data.data)
+  } catch (error) {
+    console.error(error)
+  }
+});
 
 app.listen(PORT, () => console.log('Your server is running on PORT ' + PORT));
 

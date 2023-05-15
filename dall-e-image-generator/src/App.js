@@ -53,7 +53,7 @@ const App = () => {
     formData.append('file', e.target.files[0])
     setModalOpen(true)
     setSelectedImage(e.target.files[0])
-
+    e.target.value = null
     try {
       const options = {
         method: 'POST',
@@ -62,6 +62,28 @@ const App = () => {
       const response = await fetch('http://localhost:8000/upload', options)
       const data = response.json()
       console.log(data)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const generateVariations = async () => {
+    setImages(null)
+    if (selectedImage === null) {
+      setError("Error, must have an existing Image")
+      setModalOpen(false)
+      return
+    }
+    try {
+      const options = {
+        method: "POST"
+      }
+      const response = await fetch('http://localhost:8000/variations', options)
+      const data = await response.json()
+      console.log(data)
+      setImages(data)
+      setError(null)
+      setModalOpen(false)
     } catch (error) {
       console.error(error)
     }
@@ -83,14 +105,19 @@ const App = () => {
         </div>
         <p className="extra-info">
           <span>
-            <label htmlFor="files">Click here to upload an image in 256x256, 512x512 or 1024x1024 format</label>
+            <label htmlFor="files">Click here to upload an image in 256 x 256, 512 x 512 or 1024 x 1024 format</label>
             <input onChange={uploadImage} type="file" id="files" accept="image/*" hidden />
           </span>
 
         </p>
         {error && <p>{error}</p>}
         {modalOpen && <div className="overlay">
-          <Modal setModalOpen={setModalOpen} setSelectedImage={setSelectedImage} selectedImage={selectedImage}></Modal>
+          <Modal
+            setModalOpen={setModalOpen}
+            setSelectedImage={setSelectedImage}
+            selectedImage={selectedImage}
+            generateVariations={generateVariations}
+          ></Modal>
         </div>}
       </section>
       <section className="image-section">

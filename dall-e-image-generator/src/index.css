@@ -88,6 +88,7 @@ p {
   flex-grow: 1;
 
 }
+
 .extra-info {
   text-align: center;
 }
@@ -110,5 +111,42 @@ p {
   .image-section img {
     max-width: 100%;
   }
+}
+
+.modal {
+  position: relative;
+  z-index: 100;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal button {
+  width: 100%;
+  padding: 20px;
+  border: none;
+  cursor: pointer;
+}
+
+.modal button:active {
+  background-color: #fafafc;
+}
+
+.xButton {
+  cursor: pointer;
+}
+/* .modal img {
+  width: 256px;
+  height: 256px;
+  overflow: hidden;
+} */
+/* above code will automatically resize image to 256x256 dimensions, rather than leading to error */
+
+.img-container {
+  width: 256px;
+  height: 256px;
+  overflow: hidden;
 }
 
